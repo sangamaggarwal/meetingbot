@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.bot.dto.nlp.NLPData;
+import com.bot.json.pojo.Result;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HttpClient {
@@ -39,9 +40,10 @@ public class HttpClient {
          return nlpData;
     }
     
-    public void getGoogleData(String message) {
+    public Result getGoogleData(String message) {
     	HttpURLConnection con = null;
     	String requestUrl = null;
+    	Result obj = null;
    		requestUrl = "https://speech.googleapis.com/v1beta1/speech:syncrecognize?fields=results&key=" + "AIzaSyBbr7C0GCiUfFOt1GiuY5wtf8QepgYuvXw";
          try {
     	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
@@ -63,6 +65,8 @@ public class HttpClient {
 	                response.append(inputLine);
 	            }
 	            in.close();
+	            ObjectMapper mapper = new ObjectMapper();
+	            obj = mapper.readValue(response.toString(), Result.class);
 	            System.out.println("response:" + response.toString());
         } catch(Exception e){
         	System.out.println(e);
@@ -71,6 +75,7 @@ public class HttpClient {
         		con.disconnect();
         	}
         }
+		return obj;
     }
     
     public NLPData getAnyIssueNLPData(String message) {

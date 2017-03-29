@@ -13,6 +13,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -114,8 +116,8 @@ public class BotController {
     }
     
     @RequestMapping(value = "botatwork/sendaudio", method=RequestMethod.POST, consumes="application/json")
-    public void getAudio(@RequestBody AudioData audioData){
-        
+    public ResponseEntity<String> getAudio(@RequestBody AudioData audioData){
+    	String data = "";
         try{
         	/*//hit google speech api
         	
@@ -125,13 +127,14 @@ public class BotController {
         	//send MOP
         	sendMail(msg);*/
         	
-        	new GoogleService().getTextData(audioData);
+        	data = new GoogleService().getTextData(audioData);
         }
         catch (IllegalArgumentException e) {
         	System.out.println(e);
         }catch(Exception e){
         	System.out.println(e);
         }
+        return new ResponseEntity<String>(data, HttpStatus.OK);
     }
     
     public void sendMail(String msg) {
