@@ -44,7 +44,7 @@ public class HttpClient {
     	HttpURLConnection con = null;
     	String requestUrl = null;
     	Result obj = null;
-   		requestUrl = "https://speech.googleapis.com/v1beta1/speech:syncrecognize?fields=results&key=" + "AIzaSyBbr7C0GCiUfFOt1GiuY5wtf8QepgYuvXw";
+   		requestUrl = "https://speech.googleapis.com/v1beta1/speech:syncrecognize?fields=results&key=AIzaSyBbr7C0GCiUfFOt1GiuY5wtf8QepgYuvXw";
          try {
     	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
 		   		con = (HttpURLConnection) preparedRequestUrl.openConnection();

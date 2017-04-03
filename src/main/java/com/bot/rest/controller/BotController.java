@@ -13,6 +13,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,9 @@ import com.bot.util.PushDataToNLP;
 @RestController
 public class BotController {
     
+	@Autowired
+	private GoogleService googleService;
+	
     @RequestMapping(value = "botatwork/processData", method=RequestMethod.POST, consumes="application/json")
     public void saveMessagestoDB(@RequestBody ScrumData inputJsonWrapper){
         List<WorkDetail> list = new LinkedList<>();
@@ -85,7 +89,7 @@ public class BotController {
                 }
                 userDao.saveUser(usersList);
                 workDetailDao.saveWorkDetail(list);
-                PushDataToNLP  pushDataToNLP = new PushDataToNLP(list);
+                PushDataToNLP  pushDataToNLP=null;// = new PushDataToNLP(list);
                 pushDataToNLP.start();
         }
         catch (IllegalArgumentException e) {
@@ -119,15 +123,8 @@ public class BotController {
     public ResponseEntity<String> getAudio(@RequestBody AudioData audioData){
     	String data = "";
         try{
-        	/*//hit google speech api
         	
-        	//List<NlpDetails> nlpdetailList =  new ScrumParserDetailsDAOImpl().getScrumDetailsFor(audioData);
-        	//Update JIRA
-        	String msg = "";//getMOMData(nlpdetailList);
-        	//send MOP
-        	sendMail(msg);*/
-        	
-        	data = new GoogleService().getTextData(audioData);
+        	data = googleService.getTextData(audioData);
         }
         catch (IllegalArgumentException e) {
         	System.out.println(e);

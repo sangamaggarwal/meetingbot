@@ -13,7 +13,6 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public boolean saveUser(List<User> users) {
-        ConnectionPostgress.getConnection();
         boolean result = false;
         System.out.println("Inside save method");
         for(User status:users){

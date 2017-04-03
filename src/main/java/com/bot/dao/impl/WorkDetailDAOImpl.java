@@ -34,7 +34,7 @@ public class WorkDetailDAOImpl implements WorkDetailDAO{
                     preparedStmt = conn.prepareStatement(query);
                     preparedStmt.setString(1, status.getUserId());
                     preparedStmt.setString (2, status.getMeetingId());
-                    preparedStmt.setString (3, (status.getQues().toString()));
+                    preparedStmt.setString (3, status.getQues().name());
                     preparedStmt.setString (4, status.getAnswer());
                     preparedStmt.setTimestamp(5,getCurrentTimeStamp());
                     result = preparedStmt.execute();

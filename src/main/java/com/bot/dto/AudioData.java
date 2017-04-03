@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 	"Email",
 	"UserId",
 	"UserName",
-	"Base64String",
+	"Question",
+	"AudioData",
 	"MeetingId"
 })
 public class AudioData {
@@ -30,11 +31,14 @@ private String userId;
 @JsonProperty("UserName")
 private String userName;
 
-@JsonProperty("Base64String")
-private String base64String;
+@JsonProperty("AudioData")
+private String audioData;
 
 @JsonProperty("MeetingId")
 private String meetingId;
+
+@JsonProperty("Question")
+private String question;
 
 @JsonIgnore
 private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -79,14 +83,24 @@ public void setMeetingId(String meetingId) {
 	this.meetingId = meetingId;
 }
 
-@JsonProperty("Base64String")
-public String getBase64String() {
-return base64String;
+@JsonProperty("AudioData")
+public String getAudioData() {
+return audioData;
 }
 
-@JsonProperty("Base64String")
-public void setBase64String(String base64String) {
-this.base64String = base64String;
+@JsonProperty("AudioData")
+public void setAudioData(String audioData) {
+this.audioData = audioData;
+}
+
+@JsonProperty("Question")
+public String getQuestion() {
+return question;
+}
+
+@JsonProperty("Question")
+public void setQuestion(String Question) {
+this.question = Question;
 }
 
 @JsonAnyGetter
@@ -101,8 +115,10 @@ this.additionalProperties.put(name, value);
 
 @Override
 public String toString() {
-	return "AudioData [email=" + email + ", userId=" + userId + ", userName=" + userName + ", base64String="
-			+ base64String + ", meetingId=" + meetingId + ", additionalProperties=" + additionalProperties + "]";
+	return "AudioData [email=" + email + ", userId=" + userId + ", userName=" + userName + ", audioData=" + audioData
+			+ ", meetingId=" + meetingId + ", question=" + question + ", additionalProperties=" + additionalProperties
+			+ "]";
 }
+
 
 }
