@@ -10,7 +10,7 @@ public class ConnectionPostgress {
     public static Connection getConnection(){
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql://ec2-54-243-249-154.compute-1.amazonaws.com:5432/d9rlombttcl7gp?user=zfhvewkbtzlnwi&password=9TRpj1FdKh6S-cCE7CK1tXvHWF&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
+            conn = DriverManager.getConnection("jdbc:postgresql://ec2-54-163-234-20.compute-1.amazonaws.com:5432/d582v6llnpfu2t?user=ywilsyxqvkrsxd&password=592667d45e7bd0c506755c89ca4f93e16a4aeb8a22a18fba10b1de0ec9d20fac&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
         } catch (ClassNotFoundException | SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
