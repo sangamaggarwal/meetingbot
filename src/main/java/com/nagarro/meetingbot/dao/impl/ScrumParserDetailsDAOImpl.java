@@ -1,7 +1,6 @@
 package com.nagarro.meetingbot.dao.impl;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,30 +15,10 @@ import com.nagarro.meetingbot.util.DBConnectionManager;
 
 public class ScrumParserDetailsDAOImpl implements ScrumParserDetailsDAO{
     
-    Connection conn = null;
-    
-    private Connection getConnection(){
-        try {
-            Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql://ec2-54-243-249-154.compute-1.amazonaws.com:5432/d9rlombttcl7gp?user=zfhvewkbtzlnwi&password=9TRpj1FdKh6S-cCE7CK1tXvHWF&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory");
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-        return conn;
-    }
-    
-    private void closeConnection(){
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
     public List<NlpDetails> getScrumDetailsFor(String meetingId){
         List<NlpDetails> list = new LinkedList<NlpDetails>();
         try{
-            getConnection();
+        	Connection conn = DBConnectionManager.getConnection();
             String selectSQL = "SELECT * FROM public.nlp_details WHERE meetingId = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
             preparedStatement.setString(1, meetingId);
@@ -60,7 +39,7 @@ public class ScrumParserDetailsDAOImpl implements ScrumParserDetailsDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        closeConnection();
+        DBConnectionManager.closeConnection();
         return list;
     }
     

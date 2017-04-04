@@ -1,11 +1,13 @@
 package com.nagarro.meetingbot.rest.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -52,7 +54,14 @@ public class BotController {
 		
 			String msg = getMOMData(nlpdetailList);
 			//send MOP
-			sendMail(msg);
+			Set<Address> set = new HashSet<Address>();
+			if(null!=nlpdetailList) {
+				for(NlpDetails nlpObj : nlpdetailList) {
+					set.add(InternetAddress.parse(nlpObj.getUserId())[0]);
+				}
+			}
+			
+			sendMail(msg, set.toArray(new Address[set.size()]));
 		}
 		catch (IllegalArgumentException e) {
 			System.out.println(e);
@@ -92,7 +101,7 @@ public class BotController {
 		return new ResponseEntity<String>("", HttpStatus.OK);
 	}
 
-	public void sendMail(String msg) {
+	public void sendMail(String msg, Address[] addresses) {
 		final String username = "sangamaggarwal1990@gmail.com";
 		final String password = "gauravsharma";
 
@@ -112,8 +121,7 @@ public class BotController {
 		try {
 			javax.mail.Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("no-reply@botatwork.com"));
-			message.setRecipients(javax.mail.Message.RecipientType.TO,
-					InternetAddress.parse("sangam.aggarwal@yahoo.com"));
+			message.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
 			message.setSubject("MOM test");
 			message.setText(msg);
 			Transport.send(message);
