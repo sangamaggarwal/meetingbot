@@ -133,7 +133,7 @@ public class BotController {
 		}
 	}
 
-	public String getMOMData(List<NlpDetails> nlpdetailList){
+	/*public String getMOMData(List<NlpDetails> nlpdetailList){
 
 		StringBuilder sb = new StringBuilder();
 		Set<String> distinctUsers= nlpdetailList.stream().map(e->e.getUserId()).collect(Collectors.toSet());
@@ -149,5 +149,40 @@ public class BotController {
 
 		return sb.toString();
 
-	}
+	}*/
+	
+	public String getMOMData(List<NlpDetails> nlpdetailList){
+        StringBuilder sb = new StringBuilder();
+        Set<String> distinctUsers= nlpdetailList.stream().map(e->e.getUserId()).collect(Collectors.toSet());
+        for(String user :distinctUsers){
+            sb.append("\n"+user);
+            List<NlpDetails> userNlpDetail = nlpdetailList.stream().filter(e-> (e.getUserId().equals(user))).collect(Collectors.toList());
+            List<String> pending= userNlpDetail.stream().filter(e-> e.getPending()!=null).map(e->e.getPending()).collect(Collectors.toList());
+            List<String> completed = userNlpDetail.stream().filter(e-> e.getCompleted()!=null).map(e->e.getCompleted()).collect(Collectors.toList());
+            sb.append("\n Pending " +pending ).append("\n Completed "+ completed);
+            
+            List<NlpDetails> issueNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("issue"))).collect(Collectors.toList());
+            if(issueNlpDetails.size()>0){
+                List<String> issues = issueNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
+                sb.append("\n Issues " + issues );
+                
+            }
+            List<NlpDetails> commentsNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("risk"))).collect(Collectors.toList());
+            if(commentsNlpDetails.size()>0){
+                List<String> comments = issueNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
+                sb.append("\n Comments " + comments );
+            }
+            List<NlpDetails> riskNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("comment"))).collect(Collectors.toList());
+            if(riskNlpDetails.size()>0){
+                List<String> risk = riskNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
+                sb.append("\n Risk " + risk );
+            }
+            
+        }
+        
+        return sb.toString();
+        
+    }
+
+
 }
