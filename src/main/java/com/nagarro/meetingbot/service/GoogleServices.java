@@ -29,7 +29,7 @@ public class GoogleServices {
 		//		List<User> list = new ArrayList<>(1);
 		//		list.add(user);
 		String result = null;
-		String data = "{ \"config\": {  \"languageCode\": \"en-IN\" }, \"audio\": {  \"content\": \""+ audioData.getAudioData()+"\" }} ";
+		String data = "{ \"config\": {  \"encoding\": \"FLAC\",\"languageCode\": \"en-IN\",\"sampleRate\": 44100 }, \"audio\": {  \"content\": \""+ audioData.getAudioData()+"\" }} ";
 		Result obj = HttpClient.getGoogleData(data);
 		if(null!=obj && null!=obj.getResults() && null!=obj.getResults().get(0).getAlternatives() && null!=obj.getResults().get(0).getAlternatives().get(0).getTranscript()) {
 			result = obj.getResults().get(0).getAlternatives().get(0).getTranscript();
