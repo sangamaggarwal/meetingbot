@@ -1,4 +1,4 @@
-package com.nagarro.meetingbot.dto.nlp;
+package com.nagarro.meetingbot.json.pojo.nlp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,15 +13,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 "confidence",
-"type",
 "value"
 })
-public class ProjectIdentifier {
+public class Intent {
 
 @JsonProperty("confidence")
 private Double confidence;
-@JsonProperty("type")
-private String type;
 @JsonProperty("value")
 private String value;
 @JsonIgnore
@@ -35,16 +32,6 @@ return confidence;
 @JsonProperty("confidence")
 public void setConfidence(Double confidence) {
 this.confidence = confidence;
-}
-
-@JsonProperty("type")
-public String getType() {
-return type;
-}
-
-@JsonProperty("type")
-public void setType(String type) {
-this.type = type;
 }
 
 @JsonProperty("value")

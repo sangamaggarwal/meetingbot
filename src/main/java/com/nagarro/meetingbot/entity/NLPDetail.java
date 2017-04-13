@@ -1,13 +1,37 @@
+
 package com.nagarro.meetingbot.entity;
 
-public class NlpDetails {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "nlpdetails")
+public class NLPDetail {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	private String id;
+	@Column(name = "userId")
     private String userId;
+	@Column(name = "text")
     private String text;
+	@Column(name = "pending")
     private String pending;
+	@Column(name = "completed")
     private String completed;
+	@Column(name = "comments")
     private String comments;
+	@Column(name = "meetingId")
     private String meetingId;
+	@Column(name = "issueType")
     private String issueType;
+	@Column(name="status")
+	private String status;
+	
     public String getUserId() {
         return userId;
     }
@@ -50,7 +74,13 @@ public class NlpDetails {
     public void setIssueType(String issueType) {
         this.issueType = issueType;
     }
-    @Override
+    public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	@Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("NlpDetails [userId=").append(userId).append(", text=").append(text)

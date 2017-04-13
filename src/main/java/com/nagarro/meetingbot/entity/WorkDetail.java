@@ -1,9 +1,26 @@
 package com.nagarro.meetingbot.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "workdetail")
 public class WorkDetail {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	private String id;
+	@Column(name = "userId")
 	private String userId;
+	@Column(name = "meetingId")
 	private String meetingId;
-	private Question ques;
+	@Column(name = "ques")
+	private String ques;
+	@Column(name = "answer")
 	private String answer;
 	public String getUserId() {
 		return userId;
@@ -17,10 +34,10 @@ public class WorkDetail {
 	public void setMeetingId(String meetingId) {
 		this.meetingId = meetingId;
 	}
-	public Question getQues() {
+	public String getQues() {
 		return ques;
 	}
-	public void setQues(Question ques) {
+	public void setQues(String ques) {
 		this.ques = ques;
 	}
 	public String getAnswer() {

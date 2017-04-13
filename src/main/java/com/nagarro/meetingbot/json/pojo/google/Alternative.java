@@ -1,8 +1,7 @@
 
-package com.nagarro.meetingbot.json.pojo;
+package com.nagarro.meetingbot.json.pojo.google;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -13,23 +12,36 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "alternatives"
+    "transcript",
+    "confidence"
 })
-public class Result_ {
+public class Alternative {
 
-    @JsonProperty("alternatives")
-    private List<Alternative> alternatives = null;
+    @JsonProperty("transcript")
+    private String transcript;
+    @JsonProperty("confidence")
+    private Double confidence;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("alternatives")
-    public List<Alternative> getAlternatives() {
-        return alternatives;
+    @JsonProperty("transcript")
+    public String getTranscript() {
+        return transcript;
     }
 
-    @JsonProperty("alternatives")
-    public void setAlternatives(List<Alternative> alternatives) {
-        this.alternatives = alternatives;
+    @JsonProperty("transcript")
+    public void setTranscript(String transcript) {
+        this.transcript = transcript;
+    }
+
+    @JsonProperty("confidence")
+    public Double getConfidence() {
+        return confidence;
+    }
+
+    @JsonProperty("confidence")
+    public void setConfidence(Double confidence) {
+        this.confidence = confidence;
     }
 
     @JsonAnyGetter

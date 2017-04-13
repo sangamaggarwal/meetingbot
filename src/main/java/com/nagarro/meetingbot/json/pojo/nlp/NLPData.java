@@ -1,4 +1,4 @@
-package com.nagarro.meetingbot.dto.nlp;
+package com.nagarro.meetingbot.json.pojo.nlp;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -8,11 +8,32 @@
      http://www.springframework.org/schema/context
      http://www.springframework.org/schema/context/spring-context-3.0.xsd">
      
+     <context:property-placeholder location="classpath:application.properties"/>
+     
 	<context:annotation-config/>
 	<context:component-scan base-package="com.nagarro.meetingbot" />
  
-     <bean id="userDAO" class="com.nagarro.meetingbot.dao.impl.UserDAOImpl" />
-     
-     <bean id="workDetailDAO" class="com.nagarro.meetingbot.dao.impl.WorkDetailDAOImpl" />
-  
+	  <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName" value="org.postgresql.Driver" />
+	    <property name="url" value="${spring.datasource.url}" />
+	    <property name="username" value="${spring.datasource.username}" />
+	    <property name="password" value="${spring.datasource.password}" />
+	</bean>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	    <property name="dataSource" ref="dataSource"/>
+	    <property name="packagesToScan">
+            <list>
+                <value>com.nagarro.meetingbot.entity</value>
+            </list>
+        </property>
+	    <property name="jpaVendorAdapter">
+	        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+	    </property>
+	    <property name="jpaProperties">
+         <props>
+            <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+         </props>
+      </property>
+	</bean>
 </beans>

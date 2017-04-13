@@ -1,5 +1,5 @@
 
-package com.nagarro.meetingbot.json.pojo;
+package com.nagarro.meetingbot.json.pojo.google;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.nagarro.meetingbot.dto.nlp;
+package com.nagarro.meetingbot.json.pojo.nlp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,14 +16,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 "value",
 "type"
 })
-public class Pending {
+public class MessageBody {
 
 @JsonProperty("confidence")
 private Double confidence;
 @JsonProperty("value")
-private Integer value;
+private String value;
 @JsonProperty("type")
 private String type;
+@JsonProperty("suggested")
+private Boolean suggested;
 @JsonIgnore
 private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -38,12 +40,12 @@ this.confidence = confidence;
 }
 
 @JsonProperty("value")
-public Integer getValue() {
+public String getValue() {
 return value;
 }
 
 @JsonProperty("value")
-public void setValue(Integer value) {
+public void setValue(String value) {
 this.value = value;
 }
 
@@ -55,6 +57,16 @@ return type;
 @JsonProperty("type")
 public void setType(String type) {
 this.type = type;
+}
+
+@JsonProperty("suggested")
+public Boolean getSuggested() {
+return suggested;
+}
+
+@JsonProperty("suggested")
+public void setSuggested(Boolean suggested) {
+this.suggested = suggested;
 }
 
 @JsonAnyGetter

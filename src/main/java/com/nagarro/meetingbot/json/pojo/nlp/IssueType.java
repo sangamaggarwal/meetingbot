@@ -1,4 +1,4 @@
-package com.nagarro.meetingbot.dto.nlp;
+package com.nagarro.meetingbot.json.pojo.nlp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,12 +16,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 "value",
 "type"
 })
-public class Number {
+public class IssueType {
 
 @JsonProperty("confidence")
 private Double confidence;
 @JsonProperty("value")
-private Integer value;
+private String value;
 @JsonProperty("type")
 private String type;
 @JsonIgnore
@@ -38,12 +38,12 @@ this.confidence = confidence;
 }
 
 @JsonProperty("value")
-public Integer getValue() {
+public String getValue() {
 return value;
 }
 
 @JsonProperty("value")
-public void setValue(Integer value) {
+public void setValue(String value) {
 this.value = value;
 }
 

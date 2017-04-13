@@ -2,44 +2,22 @@ package com.nagarro.meetingbot.restclient;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.util.StringUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nagarro.meetingbot.dto.nlp.NLPData;
-import com.nagarro.meetingbot.json.pojo.Result;
+import com.nagarro.meetingbot.json.pojo.google.Result;
+import com.nagarro.meetingbot.json.pojo.nlp.NLPData;
+import com.nagarro.meetingbot.util.DateUtil;
+import com.nagarro.meetingbot.util.StringUtil;
 
 public class HttpClient {
 
-    public NLPData getNLPData(String message) {
-    	HttpURLConnection con = null;
-    	String requestUrl = null;
-    	NLPData nlpData = null;
-   		requestUrl = "https://api.wit.ai/message?v=" + formatDateToStringAWSDB(new Date()) + "&q=" + message;
-         try {
-    	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
-		   		con = (HttpURLConnection) preparedRequestUrl.openConnection();
-		   		con.setRequestMethod("GET");
-		   		con.setRequestProperty("Authorization", "Bearer P7H2FXHUGVTB2RZMCCML6TNGTH7NTLVC");
-		   		InputStream inputStream = con.getInputStream();
-		   		com.fasterxml.jackson.databind.ObjectMapper mapper = new ObjectMapper();
-		   		String str = getStringFromInputStream(inputStream);
-		   		nlpData = mapper.readValue(str, NLPData.class);
-        } catch(Exception e){
-        	System.out.println(e);
-        } finally {
-        	if(null != con) {
-        		con.disconnect();
-        	}
-        }
-         return nlpData;
-    }
-    
     public Result getGoogleData(String message) {
     	HttpURLConnection con = null;
     	String requestUrl = null;
@@ -78,20 +56,22 @@ public class HttpClient {
 		return obj;
     }
     
-    public NLPData getAnyIssueNLPData(String message) {
+    public NLPData getNLPData(String message) {
     	HttpURLConnection con = null;
     	String requestUrl = null;
     	NLPData nlpData = null;
-   		requestUrl = "https://api.wit.ai/message?v=" + formatDateToStringAWSDB(new Date()) + "&q=" + message;
+   		requestUrl = "https://api.wit.ai/message?v=" + DateUtil.formatDateToStringAWSDB(new Date()) + "&q=" + message;
          try {
     	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
 		   		con = (HttpURLConnection) preparedRequestUrl.openConnection();
 		   		con.setRequestMethod("GET");
-		   		con.setRequestProperty("Authorization", "Bearer Q32IUWWCMNCEXOJBANNJN4EPD7474NUZ");
+		   		con.setRequestProperty("Authorization", "Bearer P7H2FXHUGVTB2RZMCCML6TNGTH7NTLVC");
 		   		InputStream inputStream = con.getInputStream();
-		   		com.fasterxml.jackson.databind.ObjectMapper mapper = new ObjectMapper();
-		   		String str = getStringFromInputStream(inputStream);
-		   		nlpData = mapper.readValue(str, NLPData.class);
+		   		ObjectMapper mapper = new ObjectMapper();
+		   		String str = StringUtil.getStringFromInputStream(inputStream);
+		   		if(!StringUtils.isEmpty(str)) {
+		   			nlpData = mapper.readValue(str, NLPData.class);
+		   		}
         } catch(Exception e){
         	System.out.println(e);
         } finally {
@@ -102,39 +82,29 @@ public class HttpClient {
          return nlpData;
     }
     
-    public static String formatDateToStringAWSDB(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		String dateStr = format.format(date);
-		return dateStr;
-	}
-    
-    private String getStringFromInputStream(InputStream is) {
-
-		BufferedReader br = null;
-		StringBuilder sb = new StringBuilder();
-
-		String line;
-		try {
-
-			br = new BufferedReader(new InputStreamReader(is));
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return sb.toString();
-
-	}
-    
+    public NLPData getAnyIssueNLPData(String message) {
+    	HttpURLConnection con = null;
+    	String requestUrl = null;
+    	NLPData nlpData = null;
+   		requestUrl = "https://api.wit.ai/message?v=" + DateUtil.formatDateToStringAWSDB(new Date()) + "&q=" + message;
+         try {
+    	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
+		   		con = (HttpURLConnection) preparedRequestUrl.openConnection();
+		   		con.setRequestMethod("GET");
+		   		con.setRequestProperty("Authorization", "Bearer Q32IUWWCMNCEXOJBANNJN4EPD7474NUZ");
+		   		InputStream inputStream = con.getInputStream();
+		   		ObjectMapper mapper = new ObjectMapper();
+		   		String str = StringUtil.getStringFromInputStream(inputStream);
+		   		if(!StringUtils.isEmpty(str)) {
+		   			nlpData = mapper.readValue(str, NLPData.class);
+		   		}
+        } catch(Exception e){
+        	System.out.println(e);
+        } finally {
+        	if(null != con) {
+        		con.disconnect();
+        	}
+        }
+         return nlpData;
+    }
 }

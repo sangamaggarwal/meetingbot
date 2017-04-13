@@ -1,4 +1,4 @@
-package com.nagarro.meetingbot.entity;
+package com.nagarro.meetingbot.util;
 
 public enum Question {
 
