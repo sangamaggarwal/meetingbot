@@ -14,6 +14,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,7 @@ import com.nagarro.meetingbot.util.PushDataToNLP;
 import com.nagarro.meetingbot.util.Question;
 import com.nagarro.meetingbot.util.StringUtil;
 
+
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class BotController {
@@ -48,58 +51,68 @@ public class BotController {
 	@Autowired
 	private NLPDetailService detailService;
 	
+	private static final Logger logger = LoggerFactory.getLogger(BotController.class);
+	
 	@RequestMapping(value = "bot/meeting/{meetingId}/finished", method=RequestMethod.PUT)
-	public ResponseEntity<String> saveMessagestoDB(@PathVariable String meetingId){
+	public ResponseEntity<String> meetingFinished(@PathVariable String meetingId){
 
 		try{
-			//fetch nlp data from DB
+			logger.info("Calling bot/meeting/{}/finished", meetingId);
 			List<NLPDetail> nlpdetailList =  detailService.getAllNLPDetailsFor(meetingId);
 
-			//Generating mom data
-			String msg = getMOMData(nlpdetailList);
-			
-			//send MOP
-			Set<Address> set = new HashSet<Address>();
-			if(null!=nlpdetailList) {
-				for(NLPDetail nlpObj : nlpdetailList) {
-					set.add(InternetAddress.parse(nlpObj.getUserId())[0]);
+			if(null!=nlpdetailList && 0<nlpdetailList.size()) {
+				logger.info("NLP data found for this meeting in DB");
+				String msg = getMOMData(nlpdetailList);
+				
+				if(!StringUtils.isEmpty(msg)) {
+					Set<Address> addressSet = new HashSet<Address>();
+					for(NLPDetail nlpObj : nlpdetailList) {
+						addressSet.add(InternetAddress.parse(nlpObj.getUserId())[0]);
+					}
+					sendMail(msg, addressSet.toArray(new Address[addressSet.size()]));
+				} else {
+					logger.warn("Email Body message not generated");
 				}
+			} else {
+				logger.warn("NLP data not  found in Database for this meeting ID");
 			}
-			sendMail(msg, set.toArray(new Address[set.size()]));
+			
 		}
 		catch (IllegalArgumentException e) {
-			System.out.println(e);
+			logger.debug("IllegalArgumentException: {}", e.getMessage());
 		}catch(Exception e){
-			System.out.println(e);
+			logger.debug("Exception: {}", e.getMessage());
 		}
-		return new ResponseEntity<String>("", HttpStatus.OK);
+		return new ResponseEntity<String>("{\"Status\":\"OK\"}", HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/bot/meeting/{meetingId}/user/{userId}/question/{questionId}/response", method=RequestMethod.POST, consumes="application/json")
 	public ResponseEntity<String> getAudio(@PathVariable String meetingId,@PathVariable String userId,@PathVariable String questionId,@RequestBody AudioData audioData){
 
 		try{
+			logger.info("Calling /bot/meeting/{}/user/{}/question/{}/response", meetingId, userId, questionId);
 			String answerScript = googleService.getTextData(audioData);
-			answerScript = "I am working on PIL 1234";
-			//Saving result to DB
+			
 			if(!StringUtils.isEmpty(answerScript)) {
+				logger.info("Create Work Detail object");
 				WorkDetail workDetail = new WorkDetail();
 				workDetail.setUserId(userId);
 				workDetail.setMeetingId(meetingId);
 				workDetail.setQues(Question.find(questionId).name());
 				workDetail.setAnswer(answerScript);
 				workDetailService.save(workDetail);
-				//Push data on NLP.
+				logger.info("Saving workDetail object in DB");
+				
 				PushDataToNLP pushDataToNLP = new PushDataToNLP(workDetail, detailService);
 				pushDataToNLP.start();
 			}
 		}
 		catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			logger.debug("IllegalArgumentException: {}", e.getMessage());
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.debug("Exception: {}", e.getMessage());
 		}
-		return new ResponseEntity<String>("", HttpStatus.OK);
+		return new ResponseEntity<String>("{\"Status\":\"OK\"}", HttpStatus.OK);
 	}
 
 	public void sendMail(String msg, Address[] addresses) {
@@ -112,8 +125,7 @@ public class BotController {
 		props.put("mail.smtp.host", "smtp.gmail.com");
 		props.put("mail.smtp.port", "587");
 
-		Session session = Session.getInstance(props,
-				new javax.mail.Authenticator() {
+		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(username, password);
 			}
@@ -121,14 +133,14 @@ public class BotController {
 
 		try {
 			javax.mail.Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("no-reply@botatwork.com"));
+			message.setFrom(new InternetAddress("no-reply@nagarromeetingbot.com"));
 			message.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
-			message.setSubject("MOM test");
+			message.setSubject("MOM");
 			message.setText(msg);
 			Transport.send(message);
-			System.out.println("Done");
+			logger.info("Mail Successfully Sent.");
 		} catch (MessagingException e) {
-			throw new RuntimeException(e);
+			logger.debug("MessagingException: {}", e.getMessage());
 		}
 	}
 

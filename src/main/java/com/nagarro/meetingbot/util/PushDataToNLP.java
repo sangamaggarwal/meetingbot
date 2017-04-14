@@ -1,7 +1,7 @@
 package com.nagarro.meetingbot.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nagarro.meetingbot.entity.WorkDetail;
 import com.nagarro.meetingbot.json.pojo.nlp.NLPData;
@@ -10,33 +10,36 @@ import com.nagarro.meetingbot.service.NLPDetailService;
 
 public class PushDataToNLP extends Thread {
 
-	List<WorkDetail> list = new ArrayList<WorkDetail>();;
+	private WorkDetail workDetail = null;;
 	
 	private HttpClient httpClient = new HttpClient();
 	
 	private NLPDetailService detailService;
 	
-	public void setList(List<WorkDetail> list) {
-		this.list = list;
-	}
+	private static final Logger logger = LoggerFactory.getLogger(PushDataToNLP.class);
 	
-	public PushDataToNLP(WorkDetail detail, NLPDetailService nlpDetailService) {
-		this.list.add(detail);
+	public PushDataToNLP(WorkDetail workDetail, NLPDetailService nlpDetailService) {
+		this.workDetail= workDetail;
 		this.detailService = nlpDetailService;
 	}
 	
     @Override
     public void run() {
-    	for(WorkDetail detail: list) {
+    	if(null!=workDetail) {
     		NLPData nlpData = null;
-    		if(detail.getQues().equals(Question.any_issues.name())) {
-    			nlpData = httpClient.getAnyIssueNLPData(detail.getAnswer());
+    		if(workDetail.getQues().equals(Question.any_issues.name())) {
+    			logger.info("Any issue question found in work detail. Forwarding request to NLP");
+    			nlpData = httpClient.getAnyIssueNLPData(workDetail.getAnswer());
     		} else {
-    			nlpData = httpClient.getNLPData(detail.getAnswer());
+    			logger.info("Pending/Completed question found in work detail. Forwarding request to NLP");
+    			nlpData = httpClient.getNLPData(workDetail.getAnswer());
     		}
-    		//Save result to DB
+    		
     		if(null!=nlpData) {
-    			detailService.save(nlpData, list.get(0).getUserId(), list.get(0).getMeetingId());
+    			logger.info("NLP data found. Hence saving into DB");
+    			detailService.save(nlpData, workDetail.getUserId(), workDetail.getMeetingId());
+    		} else {
+    			logger.info("NLP data not  found.");
     		}
     	}
     }

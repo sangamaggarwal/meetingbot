@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,12 +20,15 @@ import com.nagarro.meetingbot.util.StringUtil;
 
 public class HttpClient {
 
+	private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
+	
     public Result getGoogleData(String message) {
     	HttpURLConnection con = null;
     	String requestUrl = null;
     	Result obj = null;
    		requestUrl = "https://speech.googleapis.com/v1beta1/speech:syncrecognize?fields=results&key=AIzaSyBbr7C0GCiUfFOt1GiuY5wtf8QepgYuvXw";
          try {
+        	 	logger.info("Requesting Google Speech API.");
     	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
 		   		con = (HttpURLConnection) preparedRequestUrl.openConnection();
 		   		con.setRequestMethod("POST");
@@ -33,8 +38,6 @@ public class HttpClient {
 	            wr.writeBytes(message);
 	            wr.flush();
 	            wr.close();
-	            String responseStatus = con.getResponseMessage();
-	            System.out.println(responseStatus);
 	            BufferedReader in = new BufferedReader(new InputStreamReader(
 	                    con.getInputStream()));
 	            String inputLine;
@@ -45,9 +48,9 @@ public class HttpClient {
 	            in.close();
 	            ObjectMapper mapper = new ObjectMapper();
 	            obj = mapper.readValue(response.toString(), Result.class);
-	            System.out.println("response:" + response.toString());
+	            logger.info("result : {}", response.toString());
         } catch(Exception e){
-        	System.out.println(e);
+        	logger.debug("Exception : {}", e.getMessage());
         } finally {
         	if(null != con) {
         		con.disconnect();
@@ -62,18 +65,20 @@ public class HttpClient {
     	NLPData nlpData = null;
    		requestUrl = "https://api.wit.ai/message?v=" + DateUtil.formatDateToStringAWSDB(new Date()) + "&q=" + message;
          try {
-    	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
-		   		con = (HttpURLConnection) preparedRequestUrl.openConnection();
-		   		con.setRequestMethod("GET");
-		   		con.setRequestProperty("Authorization", "Bearer P7H2FXHUGVTB2RZMCCML6TNGTH7NTLVC");
-		   		InputStream inputStream = con.getInputStream();
-		   		ObjectMapper mapper = new ObjectMapper();
-		   		String str = StringUtil.getStringFromInputStream(inputStream);
-		   		if(!StringUtils.isEmpty(str)) {
-		   			nlpData = mapper.readValue(str, NLPData.class);
-		   		}
+        	 logger.info("Requesting NLP for pending/completed issues.");
+    	     URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
+		   	 con = (HttpURLConnection) preparedRequestUrl.openConnection();
+		   	 con.setRequestMethod("GET");
+		   	 con.setRequestProperty("Authorization", "Bearer P7H2FXHUGVTB2RZMCCML6TNGTH7NTLVC");
+		   	 InputStream inputStream = con.getInputStream();
+		   	 ObjectMapper mapper = new ObjectMapper();
+		   	 String str = StringUtil.getStringFromInputStream(inputStream);
+		   	 if(!StringUtils.isEmpty(str)) {
+		   		nlpData = mapper.readValue(str, NLPData.class);
+		   	 }
+		   	 logger.info("Result Received : {}", nlpData);
         } catch(Exception e){
-        	System.out.println(e);
+        	logger.debug("Eception : {}", e.getMessage());
         } finally {
         	if(null != con) {
         		con.disconnect();
@@ -88,18 +93,20 @@ public class HttpClient {
     	NLPData nlpData = null;
    		requestUrl = "https://api.wit.ai/message?v=" + DateUtil.formatDateToStringAWSDB(new Date()) + "&q=" + message;
          try {
-    	        URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
-		   		con = (HttpURLConnection) preparedRequestUrl.openConnection();
-		   		con.setRequestMethod("GET");
-		   		con.setRequestProperty("Authorization", "Bearer Q32IUWWCMNCEXOJBANNJN4EPD7474NUZ");
-		   		InputStream inputStream = con.getInputStream();
-		   		ObjectMapper mapper = new ObjectMapper();
-		   		String str = StringUtil.getStringFromInputStream(inputStream);
-		   		if(!StringUtils.isEmpty(str)) {
-		   			nlpData = mapper.readValue(str, NLPData.class);
-		   		}
+        	 logger.info("Requesting NLP for any issues.");
+        	 URL preparedRequestUrl = new URL(requestUrl.replaceAll(" ", "%20"));
+		   	 con = (HttpURLConnection) preparedRequestUrl.openConnection();
+		   	 con.setRequestMethod("GET");
+		   	 con.setRequestProperty("Authorization", "Bearer Q32IUWWCMNCEXOJBANNJN4EPD7474NUZ");
+		   	 InputStream inputStream = con.getInputStream();
+		   	 ObjectMapper mapper = new ObjectMapper();
+		   	 String str = StringUtil.getStringFromInputStream(inputStream);
+		   	 if(!StringUtils.isEmpty(str)) {
+		   	 	nlpData = mapper.readValue(str, NLPData.class);
+		   	 }
+		   	 logger.info("Result Received : {}", nlpData);
         } catch(Exception e){
-        	System.out.println(e);
+        	logger.debug("Eception : {}", e.getMessage());
         } finally {
         	if(null != con) {
         		con.disconnect();

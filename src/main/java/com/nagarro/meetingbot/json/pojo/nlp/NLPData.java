@@ -70,4 +70,9 @@ public class NLPData {
 		this.additionalProperties.put(name, value);
 	}
 
+	@Override
+	public String toString() {
+		return "NLPData [msgId=" + msgId + ", text=" + text + ", entities=" + entities + "]";
+	}
+
 }
