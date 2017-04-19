@@ -39,14 +39,17 @@ public class NLPDetailService {
         		String projIn = null;
         		if(null!=entities.getStatus()) {
         			status = entities.getStatus().get(i>entities.getStatus().size()-1?0:i).getValue();
-        		}
-        		if(null!=entities.getProjectIdentifier()) {
-        			projIn = entities.getProjectIdentifier().get(i>entities.getStatus().size()-1?0:i).getValue();
-        		}
-        		if(status.equalsIgnoreCase("IN PROGRESS"))  {
-        			detail.setPending(projIn+"-"+entities.getNumber().get(i).getValue());
+        			if(null!=entities.getProjectIdentifier()) {
+        				projIn = entities.getProjectIdentifier().get(i>entities.getStatus().size()-1?0:i).getValue();
+        			}
+        			if(status.equalsIgnoreCase("IN PROGRESS"))  {
+        				detail.setPending(projIn+"-"+entities.getNumber().get(i).getValue());
+        			} else {
+        				detail.setCompleted(projIn+"-"+entities.getNumber().get(i).getValue());
+        			}
         		} else {
-        			detail.setCompleted(projIn+"-"+entities.getNumber().get(i).getValue());
+        			detail.setIssueType("others");
+        			detail.setComments(entities.getMessageBody().get(i).getValue());
         		}
         		detail.setMeetingId(meetingId);
         	}
@@ -59,6 +62,8 @@ public class NLPDetailService {
         		String issueType = null;
         		if(null!=entities.getIssueType()) {
         			issueType = entities.getIssueType().get(i>entities.getIssueType().size()-1?0:i).getValue();
+        		} else {
+        			issueType = "others";
         		}
         		detail.setComments(entities.getMessageBody().get(i).getValue());
         		detail.setMeetingId(meetingId);

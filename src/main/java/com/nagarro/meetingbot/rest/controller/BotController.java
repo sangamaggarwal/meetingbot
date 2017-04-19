@@ -153,28 +153,34 @@ public class BotController {
             List<String> pending= userNlpDetail.stream().filter(e-> e.getPending()!=null).map(e->e.getPending()).collect(Collectors.toList());
             List<String> completed = userNlpDetail.stream().filter(e-> e.getCompleted()!=null).map(e->e.getCompleted()).collect(Collectors.toList());
             if(null!=pending && 0<pending.size()) {
-            		sb.append("\n Pending " +pending.toString().substring(1, pending.toString().length()-1));	
+            		sb.append("\n\t Pending : " +pending.toString().substring(1, pending.toString().length()-1));	
             }
             if(null!=completed && 0<completed.size()) {
-            	sb.append("\n Completed "+ completed.toString().substring(1, completed.toString().length()-1));
+            	sb.append("\n\t Completed : "+ completed.toString().substring(1, completed.toString().length()-1));
             }
             
             List<NLPDetail> issueNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("issue"))).collect(Collectors.toList());
             if(null!=issueNlpDetails && issueNlpDetails.size()>0){
                 List<String> issues = issueNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
-                sb.append("\n Issues " + issues.toString().substring(1, issues.toString().length()-1));
+                sb.append("\n\t Issues : " + issues.toString().substring(1, issues.toString().length()-1));
                 
             }
             List<NLPDetail> commentsNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("risk"))).collect(Collectors.toList());
             if(null!=commentsNlpDetails && commentsNlpDetails.size()>0){
-                List<String> comments = issueNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
-                sb.append("\n Comments " + comments.toString().substring(1, comments.toString().length()-1) );
+                List<String> risk = issueNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
+                sb.append("\n\t Risk : " + risk.toString().substring(1, risk.toString().length()-1) );
             }
             List<NLPDetail> riskNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("comment"))).collect(Collectors.toList());
             if(null!=riskNlpDetails && riskNlpDetails.size()>0){
-                List<String> risk = riskNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
-                sb.append("\n Risk " + risk.toString().substring(1, risk.toString().length()-1));
+                List<String> comments = riskNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
+                sb.append("\n\t Comment : " + comments.toString().substring(1, comments.toString().length()-1));
             }
+            List<NLPDetail> otherNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("others"))).collect(Collectors.toList());
+            if(null!=otherNlpDetails && otherNlpDetails.size()>0){
+                List<String> others = otherNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
+                sb.append("\n\t Others : " + others.toString().substring(1, others.toString().length()-1));
+            }
+            sb.append("\n");
         }
         return sb.toString();
     }
