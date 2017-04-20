@@ -26,7 +26,7 @@ public class NLPDetailService {
 		return nlpList;
 	}
 	
-	public NLPDetail save(NLPData nlpData,String userId, String meetingId) {
+	public NLPDetail save(String answer, NLPData nlpData,String userId, String meetingId) {
 		NLPDetail detail = null;
 		Entities entities = nlpData.getEntities();
         if(null != entities.getNumber()) {
@@ -49,7 +49,7 @@ public class NLPDetailService {
         			}
         		} else {
         			detail.setIssueType("others");
-        			detail.setComments(entities.getMessageBody().get(i).getValue());
+        			detail.setComments(answer);
         		}
         		detail.setMeetingId(meetingId);
         	}
@@ -62,10 +62,11 @@ public class NLPDetailService {
         		String issueType = null;
         		if(null!=entities.getIssueType()) {
         			issueType = entities.getIssueType().get(i>entities.getIssueType().size()-1?0:i).getValue();
+        			detail.setComments(entities.getMessageBody().get(i).getValue());
         		} else {
         			issueType = "others";
+        			detail.setComments(answer);
         		}
-        		detail.setComments(entities.getMessageBody().get(i).getValue());
         		detail.setMeetingId(meetingId);
         		detail.setIssueType(issueType.trim());
         	}

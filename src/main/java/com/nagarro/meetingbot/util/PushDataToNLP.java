@@ -37,7 +37,7 @@ public class PushDataToNLP extends Thread {
     		
     		if(null!=nlpData) {
     			logger.info("NLP data found. Hence saving into DB");
-    			detailService.save(nlpData, workDetail.getUserId(), workDetail.getMeetingId());
+    			detailService.save(workDetail.getAnswer(), nlpData, workDetail.getUserId(), workDetail.getMeetingId());
     		} else {
     			logger.info("NLP data not  found.");
     		}
