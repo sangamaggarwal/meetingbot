@@ -116,8 +116,8 @@ public class BotController {
 	}
 
 	public void sendMail(String msg, Address[] addresses) {
-		final String username = "sangamaggarwal1990@gmail.com";
-		final String password = "gauravsharma";
+		final String username = "meetingbotnagarro@gmail.com";
+		final String password = "MeetingBot@1";
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
