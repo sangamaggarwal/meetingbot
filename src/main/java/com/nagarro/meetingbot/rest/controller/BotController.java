@@ -70,7 +70,7 @@ public class BotController {
 					for(NLPDetail nlpObj : nlpdetailList) {
 						addressSet.add(InternetAddress.parse(nlpObj.getUserId())[0]);
 					}
-					//sendMail(msg, addressSet.toArray(new Address[addressSet.size()]));
+					sendMail(msg, addressSet.toArray(new Address[addressSet.size()]));
 					detailService.updateStatusFor(StatusEnum.PROCESSED.name(),  nlpdetailList.stream().filter(e-> e.getId()!=null).map(e->e.getId()).collect(Collectors.toList()));
 				} else {
 					logger.warn("Email Body message not generated");
