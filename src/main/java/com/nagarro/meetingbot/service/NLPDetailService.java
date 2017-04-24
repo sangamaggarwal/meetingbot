@@ -44,9 +44,9 @@ public class NLPDetailService {
         				projIn = entities.getProjectIdentifier().get(i>entities.getStatus().size()-1?0:i).getValue();
         			}
         			if(status.equalsIgnoreCase("IN PROGRESS"))  {
-        				detail.setPending(null!=projIn?projIn:"PIL"+"-"+entities.getNumber().get(i).getValue());
+        				detail.setPending((null!=projIn?projIn:"PIL")+"-"+entities.getNumber().get(i).getValue());
         			} else {
-        				detail.setCompleted(null!=projIn?projIn:"PIL"+"-"+entities.getNumber().get(i).getValue());
+        				detail.setCompleted((null!=projIn?projIn:"PIL")+"-"+entities.getNumber().get(i).getValue());
         			}
         		} else {
         			detail.setIssueType("others");
