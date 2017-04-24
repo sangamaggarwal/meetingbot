@@ -169,7 +169,7 @@ public class BotController {
             }
             List<NLPDetail> commentsNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("risk"))).collect(Collectors.toList());
             if(null!=commentsNlpDetails && commentsNlpDetails.size()>0){
-                List<String> risk = issueNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
+                List<String> risk = commentsNlpDetails.stream().map(e -> e.getComments()).collect(Collectors.toList());
                 sb.append("\n\t Risk : " + risk.toString().substring(1, risk.toString().length()-1) );
             }
             List<NLPDetail> riskNlpDetails = userNlpDetail.stream().filter(e -> (e.getIssueType()!=null && e.getIssueType().trim().equals("comment"))).collect(Collectors.toList());
