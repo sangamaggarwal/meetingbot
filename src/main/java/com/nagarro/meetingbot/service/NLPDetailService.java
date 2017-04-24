@@ -10,6 +10,7 @@ import com.nagarro.meetingbot.entity.NLPDetail;
 import com.nagarro.meetingbot.json.pojo.nlp.Entities;
 import com.nagarro.meetingbot.json.pojo.nlp.NLPData;
 import com.nagarro.meetingbot.repository.NLPDetailRepository;
+import com.nagarro.meetingbot.util.StatusEnum;
 
 @Service
 public class NLPDetailService {
@@ -71,14 +72,21 @@ public class NLPDetailService {
         		detail.setIssueType(issueType.trim());
         	}
         }
+        detail.setStatus(StatusEnum.SAVED.name());
         nlpDetailRepository.save(detail);
 		return detail;
 	}
 	
-	public List<NLPDetail> getAllNLPDetailsFor(String meetingId) {
+	public List<NLPDetail> getAllNLPDetailsFor(String meetingId, String status) {
 		List<NLPDetail> nlpList = new ArrayList<NLPDetail>();
-		nlpDetailRepository.findByMeetingId(meetingId).forEach(nlpList::add);
+		nlpDetailRepository.findByMeetingIdAndStatus(meetingId, status).forEach(nlpList::add);
 		logger.info("Items found for meetingID : {}. Count : {}", meetingId, nlpList.size());
 		return nlpList;
+	}
+
+	public void updateStatusFor(String status, List<Integer> collect) {
+		
+		nlpDetailRepository.updatsStatusFor(status, collect);
+		
 	}
 }

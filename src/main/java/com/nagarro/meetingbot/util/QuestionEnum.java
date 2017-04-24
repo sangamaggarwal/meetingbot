@@ -1,6 +1,6 @@
 package com.nagarro.meetingbot.util;
 
-public enum Question {
+public enum QuestionEnum {
 
 	yesterday_task("YT"),
 	today_task("TT"),
@@ -12,7 +12,7 @@ public enum Question {
 		return text;
 	}
 
-	private Question(final String text) {
+	private QuestionEnum(final String text) {
 		this.text = text;
 	}
 
@@ -21,8 +21,8 @@ public enum Question {
 		return text;
 	}
 	
-	public static Question find(String name) {
-	    for (Question question : Question.values()) {
+	public static QuestionEnum find(String name) {
+	    for (QuestionEnum question : QuestionEnum.values()) {
 	        if (question.getText().equalsIgnoreCase(name)) {
 	            return question;
 	        }

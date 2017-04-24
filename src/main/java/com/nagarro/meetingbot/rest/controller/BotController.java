@@ -34,7 +34,8 @@ import com.nagarro.meetingbot.service.GoogleService;
 import com.nagarro.meetingbot.service.NLPDetailService;
 import com.nagarro.meetingbot.service.WorkDetailService;
 import com.nagarro.meetingbot.util.PushDataToNLP;
-import com.nagarro.meetingbot.util.Question;
+import com.nagarro.meetingbot.util.QuestionEnum;
+import com.nagarro.meetingbot.util.StatusEnum;
 import com.nagarro.meetingbot.util.StringUtil;
 
 
@@ -58,7 +59,7 @@ public class BotController {
 
 		try{
 			logger.info("Calling bot/meeting/{}/finished", meetingId);
-			List<NLPDetail> nlpdetailList =  detailService.getAllNLPDetailsFor(meetingId);
+			List<NLPDetail> nlpdetailList =  detailService.getAllNLPDetailsFor(meetingId, StatusEnum.SAVED.name());
 
 			if(null!=nlpdetailList && 0<nlpdetailList.size()) {
 				logger.info("NLP data found for this meeting in DB");
@@ -69,7 +70,8 @@ public class BotController {
 					for(NLPDetail nlpObj : nlpdetailList) {
 						addressSet.add(InternetAddress.parse(nlpObj.getUserId())[0]);
 					}
-					sendMail(msg, addressSet.toArray(new Address[addressSet.size()]));
+					//sendMail(msg, addressSet.toArray(new Address[addressSet.size()]));
+					detailService.updateStatusFor(StatusEnum.PROCESSED.name(),  nlpdetailList.stream().filter(e-> e.getId()!=null).map(e->e.getId()).collect(Collectors.toList()));
 				} else {
 					logger.warn("Email Body message not generated");
 				}
@@ -98,7 +100,7 @@ public class BotController {
 				WorkDetail workDetail = new WorkDetail();
 				workDetail.setUserId(userId);
 				workDetail.setMeetingId(meetingId);
-				workDetail.setQues(Question.find(questionId).name());
+				workDetail.setQues(QuestionEnum.find(questionId).name());
 				workDetail.setAnswer(answerScript);
 				workDetailService.save(workDetail);
 				logger.info("Saving workDetail object in DB");
@@ -145,7 +147,7 @@ public class BotController {
 	}
 
 	public String getMOMData(List<NLPDetail> nlpdetailList){
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("Hi Team,\n\n");
         Set<String> distinctUsers= nlpdetailList.stream().map(e->e.getUserId()).collect(Collectors.toSet());
         for(String user :distinctUsers){
             sb.append("\n"+ StringUtil.getAttendeeNameFromEmail(user) +"\n");
@@ -182,6 +184,7 @@ public class BotController {
             }
             sb.append("\n");
         }
+        sb.append("\nThanks,\nMeeting BOT");
         return sb.toString();
     }
 

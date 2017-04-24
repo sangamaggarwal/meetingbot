@@ -27,7 +27,7 @@ public class PushDataToNLP extends Thread {
     public void run() {
     	if(null!=workDetail) {
     		NLPData nlpData = null;
-    		if(workDetail.getQues().equals(Question.any_issues.name())) {
+    		if(workDetail.getQues().equals(QuestionEnum.any_issues.name())) {
     			logger.info("Any issue question found in work detail. Forwarding request to NLP");
     			nlpData = httpClient.getAnyIssueNLPData(workDetail.getAnswer());
     		} else {

@@ -14,7 +14,7 @@ public class NLPDetail {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
-	private String id;
+	private Integer id;
 	@Column(name = "userId")
     private String userId;
 	@Column(name = "text")
@@ -79,6 +79,12 @@ public class NLPDetail {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	@Override
     public String toString() {
