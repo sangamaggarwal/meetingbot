@@ -147,7 +147,7 @@ public class BotController {
 	}
 
 	public String getMOMData(List<NLPDetail> nlpdetailList){
-        StringBuilder sb = new StringBuilder("Hi Team,\n\n");
+        StringBuilder sb = new StringBuilder("Hi Team,\n\nThanks for joining the meeting today. Please see below for the meeting minutes \n");
         Set<String> distinctUsers= nlpdetailList.stream().map(e->e.getUserId()).collect(Collectors.toSet());
         for(String user :distinctUsers){
             sb.append("\n"+ StringUtil.getAttendeeNameFromEmail(user) +"\n");
